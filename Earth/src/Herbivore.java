@@ -19,10 +19,13 @@ public class Herbivore extends Animal{
     public int getHealth() { return health; }
 
     public String born() {
-        Random Numbers = new Random();
-        int n = Numbers.nextInt(3);
-        health -= n;
-        return "&";
+        if (this.health == 5) {
+            Random Numbers = new Random();
+            int n = Numbers.nextInt(3);
+            health -= n;
+            return "@";
+        }
+        else return ".";
     }
 
     public String eat() {
