@@ -18,6 +18,7 @@ public class Earth extends Clock {
             Cy = rand.nextInt(earth.length);
             earth[Cx][Cy] = plant.getString();
             plant.checkIfVisited(Cx, Cy);
+            index++;
 
             // Herbivore Initialization
             Ax = rand.nextInt(earth.length);
@@ -30,7 +31,6 @@ public class Earth extends Clock {
             By = rand.nextInt(earth.length);
             earth[Bx][By] = carn.getString();
             carn.checkIfVisited(Bx, By);
-            index++;
 
         }
 
@@ -57,14 +57,14 @@ public class Earth extends Clock {
             if (herb.getHealth() % 5 == 0) {
                 Ax = rand.nextInt(earth.length);
                 Ay = rand.nextInt(earth.length);
-                herb.checkIfVisited(Ax, Ay);
                 earth[Ax][Ay] = herb.born();
+                herb.checkIfVisited(Ax, Ay);
             }
             if (carn.getHealth() % 5 == 0) {
                 Bx = rand.nextInt(earth.length);
                 By = rand.nextInt(earth.length);
-                carn.checkIfVisited(Bx, By);
                 earth[Bx][By] = carn.born();
+                carn.checkIfVisited(Bx, By);
             }
         }
     }
