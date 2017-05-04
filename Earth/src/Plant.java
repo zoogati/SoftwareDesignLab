@@ -1,5 +1,5 @@
 /**
- * Created by socra_000 on 3/20/2017.
+ * Created by socra_000 on 3/27/2017.
  */
 public class Plant {
 
@@ -14,7 +14,7 @@ public class Plant {
         return plant;
     }
     public String born(){
-        return plant;
+        return "*";
     }
     public void checkIfVisited(int a, int b){
         this.array[a][b]= true;

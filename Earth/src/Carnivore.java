@@ -1,5 +1,5 @@
 /**
- * Created by socra_000 on 3/20/2017.
+ * Created by socra_000 on 3/27/2017.
  */
 import java.util.Random;
 
@@ -18,19 +18,20 @@ public class Carnivore extends Animal{
         return carn;
     }
 
+    public int getHealth() { return health;}
+
+
     public String born(){
         Random Numbers= new Random();
-        int n = Numbers.nextInt(8);
+        int n = Numbers.nextInt(3);
         health -=n;
         return "@";
-
     }
 
-    public String increaseHealth(){
-        Random Numbers= new Random();
-        int n = Numbers.nextInt(8);
-        health += n;
+    public String eat(){
+        health += 1;
         return "@";
     }
+
 
 }
