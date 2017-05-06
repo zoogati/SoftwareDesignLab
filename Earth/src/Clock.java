@@ -17,7 +17,7 @@ public class Clock {
         System.out.println("The Earth");
         System.out.println("What Earth size would you like? ");
         size = input.nextInt();
-        population = 4*size;
+        population = size;
         System.out.println("How many days would you like? ");
         cycles = input.nextInt();
 
@@ -30,9 +30,9 @@ public class Clock {
 
         Earth earth = new Earth();
 
-        Herbivore first = new Herbivore(visitedHerb);
+        Herbivore third = new Herbivore(visitedHerb);
         Carnivore second = new Carnivore(visitedCarn);
-        Plant third = new Plant(visitedPlant);
+        Plant first = new Plant(visitedPlant);
 
 
         while(day <= cycles){
@@ -43,10 +43,10 @@ public class Clock {
 
                 //Added randomness to the movement
                 if (day % 2 == rand.nextInt(4)) {
-                    earth.herbMove(first);
+                    earth.herbMove(third);
                 }
                 if (day % 2 == rand.nextInt(2)) {
-                    earth.carnMove(first, second);
+                    earth.carnMove(third, second);
                 }
 
                 earth.birthEarth(first,second,third,day);

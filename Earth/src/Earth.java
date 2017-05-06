@@ -9,7 +9,7 @@ public class Earth extends Clock {
     private Random rand = new Random();
     private String[][] earth = new String[Clock.size][Clock.size];
 
-    public void earthInitialize(Herbivore herb, Carnivore carn, Plant plant, int population) {
+    public void earthInitialize(Plant plant, Carnivore carn,Herbivore herb , int population) {
         int index = 0;
         while (index < population) {
 
@@ -17,24 +17,28 @@ public class Earth extends Clock {
             Cx = rand.nextInt(earth.length);
             Cy = rand.nextInt(earth.length);
             earth[Cx][Cy] = plant.getString();
-            plant.checkIfVisited(Cx, Cy);
+            plant.visited(Cx, Cy);
             index++;
 
             // Herbivore Initialization
             Ax = rand.nextInt(earth.length);
             Ay = rand.nextInt(earth.length);
-            earth[Ax][Ay] = herb.getString();
-            herb.checkIfVisited(Ax, Ay);
+            if(!plant.checkIfVisited(Ax, Ay)) {
+                earth[Ax][Ay] = herb.getString();
+                herb.visited(Ax, Ay);
+            }
 
             //Carnivore Initialization
             Bx = rand.nextInt(earth.length);
             By = rand.nextInt(earth.length);
-            earth[Bx][By] = carn.getString();
-            carn.checkIfVisited(Bx, By);
+            if(!plant.checkIfVisited(Bx, By) && !herb.checkIfVisited(Bx, By)) {
+                earth[Bx][By] = carn.getString();
+                carn.visited(Bx, By);
+            }
 
         }
 
-        //Print free spaces after initializations.
+        //Free spaces after initializations.
         for (int i = 0; i < earth.length; i++) {
             for (int j = 0; j < earth.length; j++) {
                 if (earth[i][j] == null) {
@@ -44,31 +48,43 @@ public class Earth extends Clock {
         }
     }
 
-    public void birthEarth(Herbivore herb, Carnivore carn, Plant plant, int dayNumber) {
+    public void birthEarth(Plant plant, Carnivore carn,Herbivore herb, int dayNumber) {
 
         if(dayNumber % 3 == 0){
+            //TODO: Should iterate at least length/3 of every row.
             Cx = rand.nextInt(earth.length);
             Cy = rand.nextInt(earth.length);
-            earth[Cx][Cy] = plant.born();
-            plant.checkIfVisited(Cx,Cy);
-        }
-
-        if (dayNumber % 4 == 0) {
-            if (herb.getHealth() % 5 == 0) {
-                Ax = rand.nextInt(earth.length);
-                Ay = rand.nextInt(earth.length);
-                earth[Ax][Ay] = herb.born();
-                herb.checkIfVisited(Ax, Ay);
+            if (carn.checkIfVisited(Cx, Cy) && herb.checkIfVisited(Cx, Cy)) {
+                earth[Cx][Cy] = plant.born();
+                plant.visited(Cx, Cy);
             }
-            if (carn.getHealth() % 5 == 0) {
-                Bx = rand.nextInt(earth.length);
-                By = rand.nextInt(earth.length);
+        }
+        /*TODO: Want to iterate through every visited object (Animal array)
+         *TODO: Step 1: Iterate through entire array.
+         *TODO: Step 2: if object.checkIfVisited true go to next check.
+         */
+        //TODO: getHealth to be replace with checkForBirth method.
+        if (herb.getHealth() >= 5) {
+            //TODO: Should be a random location AROUND the object. [x+-1][y+-1]
+            Ax = rand.nextInt(earth.length);
+            Ay = rand.nextInt(earth.length);
+            if (plant.checkIfVisited(Ax, Ay) && carn.checkIfVisited(Ax, Ay)) {
+                earth[Ax][Ay] = herb.born();
+                herb.visited(Ax, Ay);
+            }
+        }
+        //TODO: Same as above.
+        if (carn.getHealth() >= 5) {
+            Bx = rand.nextInt(earth.length);
+            By = rand.nextInt(earth.length);
+            if (plant.checkIfVisited(Bx, By) && herb.checkIfVisited(Bx, By)) {
                 earth[Bx][By] = carn.born();
-                carn.checkIfVisited(Bx, By);
+                carn.visited(Bx, By);
             }
         }
     }
 
+    //TODO: Might have to completely replace these move methods. Kinda drunk when I made them. Attempt Refactor.
     public void herbMove(Herbivore herb) {
         for (int row = 0; row < earth.length; row++) {
             for (int column = 0; column < earth.length; column++) {
@@ -82,7 +98,7 @@ public class Earth extends Clock {
                         }
                         else {
                             earth[row][column] = ".";
-                            herb.checkIfVisited(row,column+1);
+                            herb.visited(row,column+1);
                             earth[row][++column] = herb.getString();
                         }
                     }
@@ -101,7 +117,7 @@ public class Earth extends Clock {
                         }
                         else {
                             earth[row][column] = ".";
-                            herb.checkIfVisited(row,column+1);
+                            herb.visited(row,column+1);
                             earth[row][++column] = herb.getString();
                         }
                     }
@@ -111,7 +127,7 @@ public class Earth extends Clock {
                         }
                         else {
                             earth[row][column] = ".";
-                            herb.checkIfVisited(row+1,0);
+                            herb.visited(row+1,0);
                             earth[row + 1][0] = herb.getString();
                         }
                     }
@@ -138,7 +154,7 @@ public class Earth extends Clock {
                         }
                         else {
                             earth[row][column] = ".";
-                            carn.checkIfVisited(row,column+1);
+                            carn.visited(row,column+1);
                             earth[row][++column] = carn.getString();
                         }
                     }
@@ -160,7 +176,7 @@ public class Earth extends Clock {
                         }
                         else {
                             earth[row][column] = ".";
-                            carn.checkIfVisited(row, column + 1);
+                            carn.visited(row, column + 1);
                             earth[row][++column] = carn.getString();
                         }
                     }
@@ -170,7 +186,7 @@ public class Earth extends Clock {
                         }
                         else {
                             earth[row][column] = ".";
-                            carn.checkIfVisited(row+1,0);
+                            carn.visited(row+1,0);
                             earth[row + 1][0] = herb.getString();
                         }
                     }

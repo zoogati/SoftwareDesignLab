@@ -3,12 +3,18 @@
  */
 public abstract class Animal{
 
-    public boolean [][] array;
+    private boolean [][] array;
+
     Animal(boolean [][] array){
         this.array = array;
     }
-    public void checkIfVisited(int a, int b) {
+
+    public void visited(int a, int b) {
         array[a][b] = true;
+    }
+
+    public boolean checkIfVisited(int a, int b) {
+        return array[a][b];
     }
 
 }
