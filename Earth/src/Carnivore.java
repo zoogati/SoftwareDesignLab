@@ -1,44 +1,65 @@
 /**
- * Created by socra_000 on 3/27/2017.
+ * Carnivore.java
+ * Purpose: Defines Carnivore class
+ *
+ * @author Daniel Obeng & Socratis Katehis
+ * @version 3.0 3/31/2017
  */
-import java.util.Random;
+public class Carnivore extends Animal
+{
+    /**
+     * Constructor of Carnivore
+     * @param pair pair(x,y) of animals location
+     */
+    public Carnivore(Pair<Integer,Integer> pair) { super(pair); }
 
+    /**
+     * @return string representation of Plant '*'
+     */
+    @Override
+    public String toString() { return "@"; }
 
-public class Carnivore extends Animal{
-
-    private String carn;
-
-    private int health = 3;
-    private int maxHealth = 10;
-    private int age = 0;
-    private int maxage; //TODO: Max age depends on number of days (20 if "unlimited") setMaxAge
-
-    //TODO: Add method that checks if object is eligible to give birth (health > 4 && age > 4) checkForBirth
-
-    Carnivore(boolean[][] array){
-        super(array);
-        this.carn ="@";
+    /**
+     * Checks if entity is this animal's prey
+     * @param entity the entity to be checked for
+     * @return true if entity is this animal's prey
+     */
+    @Override
+    public boolean isPrey(Entity entity)
+    {
+        return (entity instanceof Herbivore);
     }
 
-    public String getString(){
-        return carn;
-    }
-
-    public int getHealth() { return health;}
-
-
-    public String born(){
-        Random Numbers= new Random();
-        int n = Numbers.nextInt(3);
-        health -=n;
-        return "@";
-    }
-
-    public String eat(){
-        if (health < maxHealth) {
-            health += 1;
-            return "@";
+    /**
+     * Carnivore attempts to feed on prey
+     * @param entity the organism that animal should try to feed on
+     * @return true if animal successfully fed on the organism
+     */
+    @Override
+    public boolean feedOn(Entity entity)
+    {
+        if (entity instanceof Herbivore && energy < MAX_ENERGY)
+        {
+            energy += ((Herbivore) entity).energy; //animal obtains prey's energy
+            int newX = entity.getX(), newY = entity.getY();
+            Pair<Integer,Integer> newPair = new Pair<>(newX,newY);
+            ((Herbivore) entity).die();
+            feedCount++;
+            moveTo(newPair);
+            return true;
         }
-        else return "&";
+        return false;
+    }
+
+    /**
+     * Carnivore gives birth at (x, y)
+     * @param pair pair(x,y) of child
+     */
+    @Override
+    public void giveBirthAt(Pair<Integer,Integer> pair)
+    {
+        if (earth.getEntityAt(pair) != null) return;
+        energy -= INITIAL_ENERGY;
+        earth.set( pair.getXCoord(), pair.getYCoord(), new Carnivore(pair) );
     }
 }

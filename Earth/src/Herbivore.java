@@ -1,41 +1,69 @@
 /**
- * Created by socra_000 on 3/27/2017.
+ * Herbivore.java
+ * Purpose: defines Herbivore class
+ *
+ * @author Daniel Obeng & Socratis Katehis
+ * @version 1.0 3/31/2017
  */
-import java.util.Random;
-public class Herbivore extends Animal{
+public class Herbivore extends Animal
+{
 
-    private String herb;
+    /**
+     * Herbivore Constructor
+     * @param x x-cor of herbivore
+     * @param y y-cor of herbivore
+     */
+    public Herbivore(Pair<Integer,Integer> pair) { super(pair); }
 
-    private int health = 3;
-    private int maxHealth = 10;
-    private int age = 0;
-    private int maxAge;     //TODO: Max age depends on number of days (20 if "unlimited") setMaxAge
+    /**
+     * @return string representation of Herbivore '&'
+     */
+    @Override
+    public String toString() { return "&"; }
 
-    //TODO: Add method that checks if object is eligible to give birth (health > 4 && age > 4) checkForBirth
-
-    Herbivore(boolean[][]array ){
-        super(array);
-        this.herb = "&";
+    /**
+     * checks if entity is this animal's prey
+     * @param entity the entity to check for
+     * @return true if entity is this animal's prey
+     */
+    @Override
+    public boolean isPrey(Entity entity)
+    {
+        return (entity instanceof Plant);
     }
 
-    public String getString (){
-        return herb;
-    }
-
-    public int getHealth() { return health; }
-
-    public String born() {
-        Random Numbers = new Random();
-        int n = Numbers.nextInt(3);
-        health -= n;    //Sets the health of the new object.
-        return "&";
-    }
-
-    public String eat() {
-        if (health < maxHealth) {
-            health += 1;
-            return "&";
+    /**
+     * Herbivore attempts to feed on prey
+     * @param entity the organism that animal should try to feed on
+     * @return true if animal successfully fed on the organism
+     */
+    @Override
+    public boolean feedOn(Entity entity)
+    {
+        if (entity instanceof Plant && energy < MAX_ENERGY)
+        {
+           energy += ((Plant) entity).energy;
+           int newX = entity.getX(), newY = entity.getY();
+           Pair<Integer,Integer> newPair = new Pair<>(newX,newY);
+           ((Plant) entity).die();
+           feedCount++;
+           moveTo(newPair);
+           return true;
         }
-        else return "&";
+
+        return false;
+    }
+
+    /**
+     * herbivore gives birth at (x, y)
+     * @param x x-cor of child
+     * @param y y-cor of child
+     */
+    @Override
+    public void giveBirthAt(Pair<Integer,Integer> pair)
+    {
+        if ( earth.getEntityAt(pair) != null ) return;
+        energy -= INITIAL_ENERGY;
+        earth.set(pair.getXCoord(), pair.getYCoord(), new Herbivore(pair));
     }
 }

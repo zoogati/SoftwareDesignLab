@@ -1,25 +1,35 @@
 /**
- * Created by socra_000 on 3/27/2017.
+ * Plant.java
+ * Purpose: defines Plant class to represent Plants on the earth
+ *
+ * @author Daniel Obeng and Socratis Katehis
+ * @version 1.0 3/31/2017
  */
-public class Plant {
+public class Plant extends Organism
+{
+    public Plant(Pair<Integer,Integer> pair) { super(pair); }
 
-    private String plant;
-    private boolean [][] array; //No superclass so defined here.
+    /**
+     * plants die if it meets the dying requirement
+     */
+    @Override
+    public void beginAction()
+    {
+        if (shouldDie() ) die();
+    }
 
-    Plant(boolean [][] array){
-        this.array=array;
-        this.plant = "*";
-    }
-    public String getString(){
-        return plant;
-    }
-    public String born(){
-        return "*";
-    }
-    public void visited(int a, int b){
-        this.array[a][b]= true;
-    }
-    public boolean checkIfVisited(int a, int b) {
-        return array[a][b];
+    /**
+     * @return string representation of Plant '*'
+     */
+    @Override
+    public String toString() { return "*"; }
+
+    /**
+     * Plant grows: age increases and its energy increases
+     */
+    public void grow()
+    {
+        age++;
+        energy += 0.2;
     }
 }
